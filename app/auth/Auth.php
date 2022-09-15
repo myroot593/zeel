@@ -68,18 +68,27 @@ class Auth implements SessionHandlerInterface
 	{
 		try
 		{
-			$time = time();
+			
+			//$time = time();
+			$DateTime = date('Y-m-d H:i:s');
+        	$NewDateTime = date('Y-m-d H:i:s',strtotime($DateTime.' + 1 hour'));
 			$sql = "REPLACE INTO session(sid, created, session_data) VALUES(:sid, :created, :session_data)";
 			$stmt=$this->koneksi->prepare($sql);
 			$stmt->bindParam(":sid", $sessionId);
-			$stmt->bindParam(":created", $time);
+			$stmt->bindParam(":created", $NewDateTime);
 			$stmt->bindParam(":session_data",$sessionData);
-			$stmt->execute();
-			return true;
+			if($stmt->execute())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		catch(PDOException $e)
 		{
-			return false;
+			echo $e->getMessage();
 		}
 	}
 	public function destroy($sessionId)
@@ -93,37 +102,22 @@ class Auth implements SessionHandlerInterface
 		}
 		catch(PDOException $e)
 		{
-			return false;
+			echo $e->getMessage();
 		}
 	}
-	/*
-		public function gc($maxliftime)
+	
+	
+	public function gc($maxlifetime)
 	{
 		try
 		{
-			$pas = time() - $maxliftime;
-			$sql = "DELETE FROM session WHERE created < ?";
-			$stmt = $this->koneksi->prepare($sql);
-			$stmt->bindParam("i",$pas);
-			$stmt->execute();
-			return true;
-
-		}
-		catch(PDOException $e)
-
-		{
-			
-			return false;
-		}
-	}
-	*/
-	public function gc($maxliftime)
-	{
-		try
-		{
+			//DELETE  FROM session WHERE ((UNIX_TIMESTAMP(created)) < UNIX_TIMESTAMP(NOW()));
 			//$pas = time() - $maxliftime;
 			//$sql = "DELETE FROM session WHERE created < '$pass'";
-			$sql = "DELETE FROM session WHERE created  < DATE_SUB(NOW(), INTERVAL $maxliftime SECOND )";
+			//$sql = "DELETE FROM session WHERE created  < DATE_SUB(NOW(), INTERVAL $maxlifetime SECOND )";
+			//$sql = "DELETE FROM session WHERE ((UNIX_TIMESTAMP(created) + ".$maxlifetime.") < ".$maxlifetime.")";
+			//$sql = "DELETE  FROM session WHERE ((UNIX_TIMESTAMP(created)+$maxlifetime) < UNIX_TIMESTAMP(NOW()))";
+			$sql = "DELETE  FROM session WHERE ((UNIX_TIMESTAMP(created)) < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $maxlifetime SECOND)))";
 			$stmt = $this->koneksi->query($sql);			
 			$stmt->execute();
 			return $stmt;
@@ -131,12 +125,12 @@ class Auth implements SessionHandlerInterface
 
 		}
 		catch(PDOException $e)
-
 		{
 			
 			echo $e->getMessage();
 		}
 	}
+	
 	public function close()
 	{
 		return true;
