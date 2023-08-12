@@ -35,6 +35,29 @@
 	$modul->apprun_user('../',$_SESSION['uid']);
 **/
 
+require "database/Settings.php";
+require "app/core/Splautoload.php";
+require "app/core/PHPMailerpublic.php";
+require "app/core/MailSender.php";
+
+$app->getEmpty('page');
+$current=$app->get('page');
+$array = array('login','login_maintenance');
+
+if(!in_array($current, $array))
+{
+	session_start();
+	if(!empty($handler->read(session_id())))header("location:user/?page=home");
+	
+}else{
+
+	session_set_save_handler($handler, true);
+	session_start();
+	if(!empty($handler->read(session_id())))header("location:user/?page=home");
+}
+$handler->gc(200000);
+//$modul->apprun_public_bootstraplander($path=null, $file='captcha.php');
+$modul->apprun_public($path=null, $file='captcha.php');
 
 
 
