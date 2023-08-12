@@ -41,11 +41,7 @@ class Auth implements SessionHandlerInterface
 	}
 	public function open($save_path, $session_name)
 	{
-		if($this->koneksi):
-			return true;
-		else:
-			return false;
-		endif;
+		return true;
 	}
 	public function read($sessionId)
 	{
@@ -111,12 +107,7 @@ class Auth implements SessionHandlerInterface
 	{
 		try
 		{
-			//DELETE  FROM session WHERE ((UNIX_TIMESTAMP(created)) < UNIX_TIMESTAMP(NOW()));
-			//$pas = time() - $maxliftime;
-			//$sql = "DELETE FROM session WHERE created < '$pass'";
-			//$sql = "DELETE FROM session WHERE created  < DATE_SUB(NOW(), INTERVAL $maxlifetime SECOND )";
-			//$sql = "DELETE FROM session WHERE ((UNIX_TIMESTAMP(created) + ".$maxlifetime.") < ".$maxlifetime.")";
-			//$sql = "DELETE  FROM session WHERE ((UNIX_TIMESTAMP(created)+$maxlifetime) < UNIX_TIMESTAMP(NOW()))";
+			
 			$sql = "DELETE  FROM session WHERE ((UNIX_TIMESTAMP(created)) < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $maxlifetime SECOND)))";
 			$stmt = $this->koneksi->query($sql);			
 			$stmt->execute();
@@ -135,4 +126,9 @@ class Auth implements SessionHandlerInterface
 	{
 		return true;
 	}
+	public function __destruct()
+	{
+		return true;
+	}
+
 }
