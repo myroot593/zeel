@@ -537,7 +537,7 @@ class Property extends hashingProperty
 	{
 		
 			foreach ($data as $error) {
-				return $error;
+				$this->alert('alert-danger',$error);
 			}
 	
 	}
