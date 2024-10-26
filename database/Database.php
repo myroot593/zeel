@@ -11,7 +11,7 @@ class Database
     public function __construct()
     {
         $host = 'localhost';
-        $dbname = 'bukuinduk';
+        $dbname = 'yourdb';
         $username = 'root';
         $password = '';
 
