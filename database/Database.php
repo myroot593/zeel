@@ -1,29 +1,38 @@
 <?php
+namespace database;
 
+use PDO;
+use PDOException;
 
-class database 
+class Database
 {
-	
+    protected $pdo;
 
-	protected $link;
-	protected $databases;
-	public function __construct($databases)
-	{
-		
-		
-		try
-		{
-			$this->databases = $databases;			
-			$this->link = new PDO("mysql:host=".$this->databases['default']['default']['host']."; dbname=".$this->databases['default']['default']['database']."",$this->databases['default']['default']['username'], $this->databases['default']['default']['password']);
-			$this->link->setAttribute (PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		}
-		catch(PDOException $e)
-		{
-			echo $e->getMessage();
-		}
-		return $this->link;
-		
-	}
+    public function __construct()
+    {
+        $host = 'localhost';
+        $dbname = 'bukuinduk';
+        $username = 'root';
+        $password = '';
 
+        try {
+            $dsn = "mysql:host=$host;dbname=$dbname";
+            $this->pdo = new PDO($dsn, $username, $password);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            echo 'Connection failed: ' . $e->getMessage();
+            exit;
+        }
+    }
+
+    public function getConnection()
+    {
+        return $this->pdo;
+    }
+    public function secretkey()
+    {
+        return [
+            'encryption_key' => 'gT9&jH7$zK2@xL8#',
+        ];
+    }
 }
-?>
