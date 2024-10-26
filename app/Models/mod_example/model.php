@@ -1,3 +1,4 @@
 <?php 
-Class Yourmodel{
+namespace Models\mod_example;
+Class model{
 }
