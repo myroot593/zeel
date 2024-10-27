@@ -1,6 +1,6 @@
 <?php 
 namespace Core;
-use config\Database;
+use database\Database;
 
 class Constructor extends Database
 {
